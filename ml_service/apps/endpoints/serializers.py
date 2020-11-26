@@ -6,7 +6,7 @@ class EndpointSerializer(serializers.ModelSerializer):
         model = Endpoint
         fields = ('id','name','owner','created_on')
 
-class MLAlgorithmSerializer(serializer.ModelSerializer):
+class MLAlgorithmSerializer(serializers.ModelSerializer):
     current_status = serializers.SerializerMethodField(read_only=True)
 
     def get_current_status(self,mlalgorithm):
