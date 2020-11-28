@@ -1,11 +1,12 @@
 from django.test import TestCase
 from apps.ml.income_classifier.random_forest import RandomForestClassifier
+from rest_framework.test import APIClient
 from .registry import MLRegistry
 import inspect
 
 class MLTests(TestCase):
-    def test_rf_algorithm(self):
-        input_data = {
+    def setUp(self):
+        self.input_data = {
             "age": 37,
             "workclass": "Private",
             "fnlwgt": 34146,
@@ -21,8 +22,10 @@ class MLTests(TestCase):
             "hours-per-week": 68,
             "native-country": "United-States"
                 }
+
+    def test_rf_algorithm(self):
         my_alg = RandomForestClassifier()
-        response = my_alg.compute_prediction(input_data)
+        response = my_alg.compute_prediction(self.input_data)
         self.assertEqual('OK',response['status'])
         self.assertTrue('label' in response)
         self.assertEqual('<=50K',response['label'])
@@ -41,5 +44,13 @@ class MLTests(TestCase):
         registry.add_algorithm(endpoint_name,algorithm_object,algorithm_name,algorithm_status,algorithm_version,owner,description,algorithm_code)
         self.assertEqual(len(registry.endpoint),1)
 
+    '''def test_predict_view(self):
+        client = APIClient()
+        classifier_url='/api/v1/income_classifier/predict'
+        response = client.post(classifier_url,self.input_data,format='json')
+        self.assertEqual(response.data['label'],"<=50K")
+        self.assertTrue("request_id" in response.data)
+        self.assertTrue("status" in response.data)
+'''
 
         

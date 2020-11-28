@@ -19,4 +19,5 @@ class MLRegistry:
         self.endpoint[database_object.id]=algorithm_object
 
 
+
         
